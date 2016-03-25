@@ -8,11 +8,18 @@ import java.net.DatagramPacket;
 import java.net.InetAddress;
 import java.net.MulticastSocket;
 import java.net.UnknownHostException;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Logger;
 
 public class ConnectionEstablishAnycastServer implements Runnable {
 
     private static final Logger LOG = Logger.getLogger(ConnectionEstablishAnycastServer.class.getName());
+
+    private final AtomicInteger connectedCnt;
+
+    public ConnectionEstablishAnycastServer() {
+        connectedCnt = new AtomicInteger(0);
+    }
 
     @Override
     public void run() {
@@ -37,9 +44,26 @@ public class ConnectionEstablishAnycastServer implements Runnable {
                 ServerConnectionEstablishPacket extractedPacket = ServerConnectionEstablishPacket.extractFromPacket(msgPacket);
                 LOG.info("Received packet: " + extractedPacket);
                 System.out.println("Socket 1 received msg: " + extractedPacket);
+
+                if (connectedCnt.incrementAndGet() >= Constants.SERVER_MAX_CLIENT_COUNT) {
+                    LOG.info("Too many clients for this server, leaving group");
+                    clientSocket.leaveGroup(address);
+
+                    while(connectedCnt.get() >= Constants.SERVER_MAX_CLIENT_COUNT) {
+                        connectedCnt.wait();
+                    }
+
+                    LOG.info("Joining group, waiting for clients");
+                    clientSocket.joinGroup(address);
+                }
             }
-        } catch (IOException ex) {
+        } catch (IOException | InterruptedException ex) {
             ex.printStackTrace();
         }
+    }
+
+    public void disconnect() {
+        this.connectedCnt.decrementAndGet();
+        connectedCnt.notifyAll();
     }
 }
