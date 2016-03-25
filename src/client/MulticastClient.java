@@ -1,3 +1,5 @@
+package client;
+
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.InetAddress;
@@ -7,7 +9,7 @@ import java.util.logging.Logger;
 
 public class MulticastClient implements Runnable {
 
-    public static final Logger LOG = Logger.getLogger(MulticastClient.class.getName());
+    private static final Logger LOG = Logger.getLogger(MulticastClient.class.getName());
 
     private final static String INET_ADDRESS = "FF02::1";
     private final static int PORT = 1234;
@@ -15,11 +17,12 @@ public class MulticastClient implements Runnable {
     @Override
     public void run() {
 
-        InetAddress address = null; // Get the address that we are going to connect to.
+        InetAddress address; // Get the address that we are going to connect to.
         try {
             address = InetAddress.getByName(INET_ADDRESS);
         } catch (UnknownHostException e) {
             LOG.severe("Error, while getting InetAddress, msg = " + e.getMessage());
+            throw new IllegalStateException("Error, while getting InetAddress, msg = " + e.getMessage());
         }
 
         // Create a buffer of bytes, which will be used to store
@@ -33,7 +36,7 @@ public class MulticastClient implements Runnable {
             //Joint the Multicast group.
             clientSocket.joinGroup(address);
 
-            while (true) {
+            while (!Thread.currentThread().isInterrupted()) {
                 // Receive the information and print it.
                 DatagramPacket msgPacket = new DatagramPacket(buf, buf.length);
                 clientSocket.receive(msgPacket);

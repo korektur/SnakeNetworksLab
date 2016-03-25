@@ -1,3 +1,5 @@
+package server;
+
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
@@ -7,7 +9,7 @@ import java.util.logging.Logger;
 
 public class MulticastServer implements Runnable {
 
-    public static final Logger LOG = Logger.getLogger(MulticastServer.class.getName());
+    private static final Logger LOG = Logger.getLogger(MulticastServer.class.getName());
 
     private final static String INET_ADDRESS = "FF02::1";
     private final static int PORT = 1234;

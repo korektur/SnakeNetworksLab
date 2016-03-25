@@ -1,3 +1,6 @@
+import client.MulticastClient;
+import server.MulticastServer;
+
 /**
  * Created by Pavel Asadchiy
  *     25.03.16 13:00.
