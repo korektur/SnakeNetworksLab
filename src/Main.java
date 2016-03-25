@@ -1,5 +1,5 @@
 import client.MulticastClient;
-import server.MulticastServer;
+import server.ConnectionEstablishAnycastServer;
 
 /**
  * Created by Pavel Asadchiy
@@ -7,7 +7,7 @@ import server.MulticastServer;
  */
 public class Main {
     public static void main(String[] args) {
-        Thread serverThread = new Thread(new MulticastServer());
+        Thread serverThread = new Thread(new ConnectionEstablishAnycastServer());
         Thread clientThread = new Thread(new MulticastClient());
 
         serverThread.start();

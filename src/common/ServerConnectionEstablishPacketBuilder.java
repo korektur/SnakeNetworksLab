@@ -12,33 +12,32 @@ import java.nio.ByteBuffer;
  */
 public class ServerConnectionEstablishPacketBuilder {
 
-    private Inet6Address inet6Address;
-    private int port;
+    private final ServerConnectionEstablishPacket packet;
 
     public ServerConnectionEstablishPacketBuilder() {
+        packet = new ServerConnectionEstablishPacket();
     }
 
     public ServerConnectionEstablishPacketBuilder setInet6Address(Inet6Address inet6Address) {
-        this.inet6Address = inet6Address;
+        packet.inetAddress = inet6Address;
         return this;
     }
 
     public ServerConnectionEstablishPacketBuilder setPort(int port) {
-        this.port = port;
+        this.packet.port = port;
         return this;
     }
 
     public DatagramPacket build() {
-        ByteBuffer buffer = ByteBuffer.allocate(inet6Address.getAddress().length + Integer.BYTES);
-        buffer.put(inet6Address.getAddress());
-        buffer.putInt(port);
+        ByteBuffer buffer = ByteBuffer.allocate(packet.inetAddress.getAddress().length + Integer.BYTES);
+        buffer.put(packet.inetAddress.getAddress());
+        buffer.putInt(packet.port);
+
         try {
             InetAddress inetAddress = InetAddress.getByName(Constants.ANYCAST_ADDRESS);
             return new DatagramPacket(buffer.array(), buffer.limit(), inetAddress, Constants.SERVER_IDENTIFICATION_PORT);
         } catch (UnknownHostException e) {
             throw new IllegalStateException("Error, while getting InetAddress, msg = " + e.getMessage());
         }
-
-
     }
 }
