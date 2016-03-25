@@ -3,15 +3,24 @@ import java.net.DatagramPacket;
 import java.net.InetAddress;
 import java.net.MulticastSocket;
 import java.net.UnknownHostException;
+import java.util.logging.Logger;
 
-public class MulticastClient {
+public class MulticastClient implements Runnable {
 
-    final static String INET_ADDR = "ff00:1234::";
-    final static int PORT = 1234;
+    public static final Logger LOG = Logger.getLogger(MulticastClient.class.getName());
 
-    public static void main(String[] args) throws UnknownHostException {
-        // Get the address that we are going to connect to.
-        InetAddress address = InetAddress.getByName(INET_ADDR);
+    private final static String INET_ADDRESS = "FF02::1";
+    private final static int PORT = 1234;
+
+    @Override
+    public void run() {
+
+        InetAddress address = null; // Get the address that we are going to connect to.
+        try {
+            address = InetAddress.getByName(INET_ADDRESS);
+        } catch (UnknownHostException e) {
+            LOG.severe("Error, while getting InetAddress, msg = " + e.getMessage());
+        }
 
         // Create a buffer of bytes, which will be used to store
         // the incoming bytes containing the information from the server.

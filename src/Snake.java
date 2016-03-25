@@ -1,24 +1,21 @@
 import java.awt.EventQueue;
-import javax.swing.JFrame;
+import javax.swing.*;
 
 
 public class Snake extends JFrame {
 
-    public Snake() {
-
-        add(new Board());
-
+    private Snake() {
+        Board board = new Board();
+        add(board);
         setResizable(false);
         pack();
 
-        setTitle("Snake");
+        setTitle("Network snake");
         setLocationRelativeTo(null);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
     }
 
-
     public static void main(String[] args) {
-
         EventQueue.invokeLater(() -> {
             JFrame ex = new Snake();
             ex.setVisible(true);
