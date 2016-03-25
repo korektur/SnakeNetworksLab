@@ -2,12 +2,14 @@ package server;
 
 import common.Constants;
 import common.ServerConnectionEstablishPacket;
+import common.snake.Snake;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.InetAddress;
 import java.net.MulticastSocket;
 import java.net.UnknownHostException;
+import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Logger;
 
@@ -16,13 +18,17 @@ public class ConnectionEstablishAnycastServer implements Runnable {
     private static final Logger LOG = Logger.getLogger(ConnectionEstablishAnycastServer.class.getName());
 
     private final AtomicInteger connectedCnt;
+    private final ConcurrentMap<Integer, Snake> snakes;
 
-    public ConnectionEstablishAnycastServer() {
+    public ConnectionEstablishAnycastServer(ConcurrentMap<Integer, Snake> snakes) {
         connectedCnt = new AtomicInteger(0);
+        this.snakes = snakes;
     }
 
     @Override
     public void run() {
+
+        int id_counter = 1;
 
         InetAddress address; // Get the address that we are going to connect to.
         try {
@@ -45,11 +51,15 @@ public class ConnectionEstablishAnycastServer implements Runnable {
                 LOG.info("Received packet: " + extractedPacket);
                 System.out.println("Socket 1 received msg: " + extractedPacket);
 
+                Thread thread = new Thread(new EventSenderServer(id_counter, extractedPacket.getInetAddress(),
+                        extractedPacket.getPort(), snakes));
+                thread.start();
+
                 if (connectedCnt.incrementAndGet() >= Constants.SERVER_MAX_CLIENT_COUNT) {
                     LOG.info("Too many clients for this server, leaving group");
                     clientSocket.leaveGroup(address);
 
-                    while(connectedCnt.get() >= Constants.SERVER_MAX_CLIENT_COUNT) {
+                    while (connectedCnt.get() >= Constants.SERVER_MAX_CLIENT_COUNT) {
                         connectedCnt.wait();
                     }
 
