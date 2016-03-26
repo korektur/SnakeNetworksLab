@@ -47,7 +47,7 @@ class EventSenderServer implements Runnable {
              OutputStream ostream = sock.getOutputStream();
              InputStream istream = sock.getInputStream()) {
 
-
+            LOG.info("Server " + id + " started");
             ClientMessageReceiver receiver = new ClientMessageReceiver(istream);
             receiverThread = new Thread(receiver);
             ClientMessageSender sender = new ClientMessageSender(ostream);
@@ -73,6 +73,7 @@ class EventSenderServer implements Runnable {
             try (ObjectInputStream objectInputStream = new ObjectInputStream(is)) {
 
                 while (!Thread.currentThread().isInterrupted()) {
+                    LOG.info("Waiting for event");
                     Object o = objectInputStream.readObject();
                     if (o instanceof Buttons) {
                         LOG.info("Received button event " + o + " from " + id);
@@ -99,6 +100,7 @@ class EventSenderServer implements Runnable {
         public void run() {
             try (ObjectOutputStream objectOutputStream = new ObjectOutputStream(os)) {
                 while (!Thread.currentThread().isInterrupted()) {
+                    LOG.info("Sending board");
                     long curTime = System.currentTimeMillis();
                     Board boardSnapshot = snakeServerLogicImplementor.getBoardSnapshot();
                     while (System.currentTimeMillis() - curTime < Constants.SNAKE_DELAY) {

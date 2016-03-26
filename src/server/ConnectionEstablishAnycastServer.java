@@ -34,7 +34,7 @@ public class ConnectionEstablishAnycastServer implements Runnable {
 
         byte[] buf = new byte[256];
 
-        try (DatagramSocket clientSocket = new DatagramSocket(Constants.SERVER_IDENTIFICATION_PORT, address)) {
+        try (DatagramSocket clientSocket = new DatagramSocket(Constants.SERVER_IDENTIFICATION_PORT)) {
 //            clientSocket.joinGroup(address);
 
             while (!Thread.currentThread().isInterrupted()) {
