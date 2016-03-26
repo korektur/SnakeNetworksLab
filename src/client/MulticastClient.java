@@ -16,10 +16,10 @@ public class MulticastClient implements Runnable {
     public void run() {
         try (DatagramSocket serverSocket = new DatagramSocket()) {
             ServerConnectionEstablishPacketBuilder establishPacketBuilder = new ServerConnectionEstablishPacketBuilder();
-            establishPacketBuilder.setInet6Address(NetworkUtils.getIPV6()).setPort(Constants.SERVER_IDENTIFICATION_PORT);
+            establishPacketBuilder.setInetAddress(NetworkUtils.getIPV6()).setPort(Constants.SERVER_IDENTIFICATION_PORT);
             DatagramPacket datagramPacket = establishPacketBuilder.build();
             serverSocket.send(datagramPacket);
-            LOG.info("Datagram packet " + datagramPacket + " sent");
+            LOG.info("Datagram packet with IPV6 address sent");
         } catch (IOException e) {
             e.printStackTrace();
         }
