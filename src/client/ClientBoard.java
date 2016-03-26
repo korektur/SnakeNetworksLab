@@ -65,7 +65,9 @@ public class ClientBoard extends JPanel implements ActionListener {
         if (boardInfo == null) {
             return;
         }
-        g.drawImage(apple, boardInfo.getApple().getX(), boardInfo.getApple().getY(), this);
+        if (boardInfo.getApple() != null) {
+            g.drawImage(apple, boardInfo.getApple().getX(), boardInfo.getApple().getY(), this);
+        }
         for (Snake snake : boardInfo.getSnakes()) {
             LOG.info(snake.toString());
             for (int i = 0; i < snake.getSnakeLength(); i++) {

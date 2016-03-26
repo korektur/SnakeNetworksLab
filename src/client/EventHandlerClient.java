@@ -38,13 +38,13 @@ public class EventHandlerClient implements Runnable {
             objectOutputStream = new ObjectOutputStream(outputStream);
             objectInputStream = new ObjectInputStream(inputStream);
 
-//            EventButtonPressedSender eventButtonPressedSender = new EventButtonPressedSender(objectOutputStream);
-//            Thread eventButtonPressedThread = new Thread(eventButtonPressedSender);
+            EventButtonPressedSender eventButtonPressedSender = new EventButtonPressedSender(objectOutputStream);
+            Thread eventButtonPressedThread = new Thread(eventButtonPressedSender);
 
             ClientBoardInfoReceiver clientBoardInfoReceiver = new ClientBoardInfoReceiver(objectInputStream);
 
 
-//            eventButtonPressedThread.start();
+            eventButtonPressedThread.start();
             clientBoardInfoReceiver.run();
         } catch (IOException e) {
             throw new IllegalStateException("Couldn't create event sender for " + port + " beacuse of " + e.getMessage());
@@ -102,13 +102,10 @@ public class EventHandlerClient implements Runnable {
                     try {
                         objectOutputStream.writeObject(ClientBoard.DIRECTION);
                         LOG.info(Thread.currentThread() + "Send button " + ClientBoard.DIRECTION);
-                        Thread.sleep(5000);
                         objectOutputStream.flush();
                         ClientBoard.DIRECTION = null;
                     } catch (IOException e) {
                         LOG.severe(e.getMessage());
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
                     }
                 }
             }
