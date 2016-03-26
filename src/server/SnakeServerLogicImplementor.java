@@ -49,6 +49,9 @@ class SnakeServerLogicImplementor {
         Collection<Snake> values = snakes.values();
         values.forEach(Snake::checkCollision);
         values.forEach(Snake::moveSnake);
+        ConcurrentMap<Integer, Snake> snakes = new ConcurrentHashMap<>();
+        this.snakes.entrySet().forEach(e -> { if (e.getValue().isInGame()) snakes.put(e.getKey(), e.getValue());});
+        this.snakes = snakes;
     }
 
 
@@ -67,7 +70,7 @@ class SnakeServerLogicImplementor {
         public void run() {
             while(!Thread.currentThread().isInterrupted()) {
                 long startTime = System.currentTimeMillis();
-                System.out.println("SNAKES MOVED" + getBoardSnapshot() );
+//                System.out.println("SNAKES MOVED" + getBoardSnapshot() );
                 SnakeServerLogicImplementor.this.makeStep();
                 while(System.currentTimeMillis() - startTime < Constants.SNAKE_DELAY) {
                     try {
@@ -85,6 +88,6 @@ class SnakeServerLogicImplementor {
         snakes.values().forEach(snake -> {
             snakeList.add(snake.clone());
         });
-        return new Board(apple, snakes.values().stream().collect(Collectors.toList()), ++version);
+        return new Board(apple, snakeList, ++version);
     }
 }

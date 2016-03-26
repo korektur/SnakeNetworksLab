@@ -41,6 +41,8 @@ public class Snake implements Serializable {
     public synchronized boolean eatenApple(Apple apple) {
         if (x.get(0) == apple.x && y.get(0) == apple.y) {
             snakeLength++;
+            x.add(x.get(x.size() - 1));
+            y.add(y.get(y.size() - 1));
             return true;
         }
         return false;
@@ -59,7 +61,6 @@ public class Snake implements Serializable {
     }
 
     public synchronized void moveSnake() {
-
         for (int i = snakeLength - 1; i > 0; i--) {
             x.set(i, x.get(i - 1));
             y.set(i, y.get(i - 1));
@@ -102,7 +103,7 @@ public class Snake implements Serializable {
     }
 
     public synchronized void checkCollision() {
-        for (int i = snakeLength; i > 0; i--) {
+        for (int i = x.size() - 1; i > 0; i--) {
             if (i > 4 && Objects.equals(x.get(0), x.get(i)) && Objects.equals(y.get(0), y.get(i))) {
                 inGame = false;
             }
@@ -142,11 +143,10 @@ public class Snake implements Serializable {
     }
 
     public Snake clone() {
-        ArrayList<Integer> x = new ArrayList<>();
-        ArrayList<Integer> y = new ArrayList<>();
-
-        Collections.copy(x, this.getX());
-        Collections.copy(y, this.getY());
+        ArrayList<Integer> x = new ArrayList<>(getX().size());
+        ArrayList<Integer> y = new ArrayList<>(getY().size());
+        x.addAll(getX());
+        y.addAll(getY());
         return new Snake(snakeLength, x, y, leftDirection, rightDirection, upDirection, downDirection, inGame);
     }
 }
