@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 class SnakeServerLogicImplementor {
 
     private ConcurrentMap<Integer, Snake> snakes;
-
+    private int version = 0;
     private Apple apple;
 
     SnakeServerLogicImplementor() {
@@ -60,11 +60,12 @@ class SnakeServerLogicImplementor {
 
     private class BoardMaintainer implements Runnable{
 
+
         @Override
         public void run() {
             while(!Thread.currentThread().isInterrupted()) {
                 long startTime = System.currentTimeMillis();
-                System.out.println("SNAKES MOVED");
+                System.out.println("SNAKES MOVED" + getBoardSnapshot() );
                 SnakeServerLogicImplementor.this.makeStep();
                 while(System.currentTimeMillis() - startTime < Constants.SNAKE_DELAY) {
                     try {
@@ -78,6 +79,6 @@ class SnakeServerLogicImplementor {
     }
 
     Board getBoardSnapshot() {
-        return new Board(apple, Collections.unmodifiableList(snakes.values().stream().collect(Collectors.toList())));
+        return new Board(apple, Collections.unmodifiableList(snakes.values().stream().collect(Collectors.toList())), ++version);
     }
 }

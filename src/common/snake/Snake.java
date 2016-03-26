@@ -56,7 +56,8 @@ public class Snake implements Serializable {
     }
 
     public synchronized void moveSnake() {
-        for (int i = snakeLength; i > 0; i--) {
+
+        for (int i = snakeLength - 1; i > 0; i--) {
             x.set(i, x.get(i - 1));
             y.set(i, y.get(i - 1));
         }

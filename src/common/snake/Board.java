@@ -10,12 +10,14 @@ import java.util.List;
  */
 public class Board implements Serializable {
 
+    private final int version;
     private final List<Snake> snakes;
     private final Apple apple;
 
-    public Board(Apple apple, List<Snake> snakes) {
+    public Board(Apple apple, List<Snake> snakes, int version) {
         this.apple = apple;
         this.snakes = snakes;
+        this.version = version;
     }
 
     public Apple getApple() {
