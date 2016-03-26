@@ -18,8 +18,8 @@ public class ServerConnectionEstablishPacketBuilder {
         packet = new ServerConnectionEstablishPacket();
     }
 
-    public ServerConnectionEstablishPacketBuilder setInet6Address(Inet6Address inet6Address) {
-        packet.inetAddress = inet6Address;
+    public ServerConnectionEstablishPacketBuilder setInetAddress(InetAddress inetAddress) {
+        packet.inetAddress = inetAddress;
         return this;
     }
 
