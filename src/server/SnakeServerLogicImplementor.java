@@ -85,6 +85,6 @@ class SnakeServerLogicImplementor {
         snakes.values().forEach(snake -> {
             snakeList.add(snake.clone());
         });
-        return new Board(apple, snakes.values().stream().collect(Collectors.toList()), ++version);
+        return new Board(apple, snakeList, ++version);
     }
 }

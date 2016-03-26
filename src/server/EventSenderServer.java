@@ -56,7 +56,7 @@ class EventSenderServer implements Runnable {
             receiverThread = new Thread(receiver);
             ClientMessageSender sender = new ClientMessageSender(ostream);
             Thread clientSenderThread = new Thread(sender);
-//            receiverThread.start();
+            receiverThread.start();
             clientSenderThread.run();
 
         } catch (IOException e) {
@@ -122,6 +122,7 @@ class EventSenderServer implements Runnable {
 
                     LOG.info("Send snake: " + boardSnapshot);
                     objectOutputStream.writeObject(boardSnapshot);
+                    LOG.info("Send snake: " + boardSnapshot);
 //                    objectOutputStream.flush();
 
                     if (!snakes.get(id).isInGame()) {
