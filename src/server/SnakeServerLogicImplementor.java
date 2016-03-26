@@ -64,6 +64,7 @@ class SnakeServerLogicImplementor {
         public void run() {
             while(!Thread.currentThread().isInterrupted()) {
                 long startTime = System.currentTimeMillis();
+                System.out.println("SNAKES MOVED");
                 SnakeServerLogicImplementor.this.makeStep();
                 while(System.currentTimeMillis() - startTime < Constants.SNAKE_DELAY) {
                     try {

@@ -70,4 +70,9 @@ public class ConnectionEstablishAnycastServer implements Runnable {
         this.connectedCnt.decrementAndGet();
 //        connectedCnt.notifyAll();
     }
+
+    public static void main(String[] args) {
+        ConnectionEstablishAnycastServer connectionEstablishAnycastServer = new ConnectionEstablishAnycastServer();
+        connectionEstablishAnycastServer.run();
+    }
 }
