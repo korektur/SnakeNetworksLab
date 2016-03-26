@@ -1,9 +1,14 @@
 package client;
 
+import com.sun.corba.se.impl.orbutil.closure.Constant;
+import common.Constants;
 import common.snake.Board;
 
+import javax.swing.*;
+import java.awt.*;
 import java.io.*;
 import java.net.ServerSocket;
+import java.net.Socket;
 import java.util.logging.Logger;
 
 /**
@@ -24,9 +29,11 @@ public class EventHandlerClient implements Runnable {
 
     @Override
     public void run() {
-        try (ServerSocket serverSocket = new ServerSocket(port);
-             OutputStream outputStream = serverSocket.accept().getOutputStream();
-             InputStream inputStream = serverSocket.accept().getInputStream()) {
+        try (ServerSocket serverSocket = new ServerSocket(port)) {
+//            serverSocket.setSoTimeout(5000);
+            Socket accept = serverSocket.accept();
+            OutputStream outputStream = accept.getOutputStream();
+            InputStream inputStream = accept.getInputStream();
 
             objectOutputStream = new ObjectOutputStream(outputStream);
             objectInputStream = new ObjectInputStream(inputStream);
@@ -44,19 +51,34 @@ public class EventHandlerClient implements Runnable {
         }
     }
 
-    private class ClientBoardInfoReceiver implements Runnable {
+    private class ClientBoardInfoReceiver extends JFrame implements Runnable {
         private ObjectInputStream objectInputStream;
+        private ClientBoard clientBoard;
 
         private ClientBoardInfoReceiver(ObjectInputStream objectInputStream) {
             this.objectInputStream = objectInputStream;
+
+            clientBoard = new ClientBoard();
+            add(clientBoard);
+            setResizable(false);
+            pack();
+
+            setTitle("Network snake");
+            setLocationRelativeTo(null);
+            setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         }
 
         @Override
         public void run() {
-            ClientBoard clientBoard = new ClientBoard();
+            EventQueue.invokeLater(() -> {
+                JFrame ex = this;
+                ex.setVisible(true);
+            });
+
             while (!Thread.currentThread().isInterrupted()) {
                 try {
                     Board board = (Board) objectInputStream.readObject();
+                    LOG.info("Get board object");
                     clientBoard.updateBoard(board);
                     clientBoard.repaint();
                 } catch (ClassNotFoundException | IOException e) {
@@ -79,10 +101,14 @@ public class EventHandlerClient implements Runnable {
                 if (ClientBoard.DIRECTION != null) {
                     try {
                         objectOutputStream.writeObject(ClientBoard.DIRECTION);
+                        LOG.info(Thread.currentThread() + "Send button " + ClientBoard.DIRECTION);
+                        Thread.sleep(5000);
                         objectOutputStream.flush();
                         ClientBoard.DIRECTION = null;
                     } catch (IOException e) {
                         LOG.severe(e.getMessage());
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
                     }
                 }
             }

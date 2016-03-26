@@ -49,6 +49,10 @@ public class Snake implements Serializable {
         return x;
     }
 
+    public int getSnakeLength() {
+        return snakeLength;
+    }
+
     public synchronized void moveSnake() {
         for (int i = snakeLength; i > 0; i--) {
             x[i] = x[i - 1];

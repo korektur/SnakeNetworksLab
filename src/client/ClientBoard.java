@@ -10,6 +10,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.util.Arrays;
 
 import static common.Constants.BOARD_HEIGHT;
 import static common.Constants.BOARD_WIDTH;
@@ -58,12 +59,17 @@ public class ClientBoard extends JPanel implements ActionListener {
     }
 
     private void drawing(Graphics g) {
+        if (boardInfo == null) {
+            return;
+        }
         g.drawImage(apple, boardInfo.getApple().getX(), boardInfo.getApple().getY(), this);
         for (Snake snake : boardInfo.getSnakes()) {
-            for (int i = 0; i < snake.getX().length; i++) {
+            System.out.println(snake);
+            for (int i = 0; i < snake.getSnakeLength(); i++) {
                 g.drawImage(i == 0 ? head : ball, snake.getX()[i], snake.getY()[i], this);
             }
         }
+
     }
 
     @Override
