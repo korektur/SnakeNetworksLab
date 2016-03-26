@@ -15,6 +15,7 @@ import java.util.logging.Logger;
 public class Constants {
 
     public static final int SERVER_IDENTIFICATION_PORT = 1234;
+    public static final int CLIENT_LISTENER_PORT = 1235;
     public static final String ANYCAST_ADDRESS = "FF02::1";
     public static final int SERVER_MAX_CLIENT_COUNT = 4;
     public static final int BOARD_WIDTH = 1000;

@@ -31,6 +31,14 @@ public class Snake implements Serializable {
 
     }
 
+    public int[] getX() {
+        return x;
+    }
+
+    public int[] getY() {
+        return y;
+    }
+
     public boolean eatenApple(Apple apple) {
         if (x[0] == apple.x && y[0] == apple.y) {
             snakeLength++;

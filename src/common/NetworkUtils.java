@@ -13,14 +13,14 @@ import java.util.logging.Logger;
  */
 public class NetworkUtils {
 
-    private static final Logger LOG = Logger.getLogger(NetworkUtils .class.getName());
+    private static final Logger LOG = Logger.getLogger(NetworkUtils.class.getName());
 
     public static InetAddress getIPV6() {
         try {
-            for (Enumeration<NetworkInterface> en = NetworkInterface.getNetworkInterfaces(); en.hasMoreElements();) {
+            for (Enumeration<NetworkInterface> en = NetworkInterface.getNetworkInterfaces(); en.hasMoreElements(); ) {
                 NetworkInterface networkInterface = en.nextElement();
                 if (correctNetworkInterface(networkInterface)) {
-                    for (Enumeration<InetAddress> inetAddresses = networkInterface.getInetAddresses(); inetAddresses.hasMoreElements();) {
+                    for (Enumeration<InetAddress> inetAddresses = networkInterface.getInetAddresses(); inetAddresses.hasMoreElements(); ) {
                         InetAddress inetAddress = inetAddresses.nextElement();
                         if (inetAddress.getHostAddress().contains(":")) {
                             LOG.info(networkInterface.getDisplayName() + " - " + inetAddress.getHostAddress());
@@ -36,7 +36,7 @@ public class NetworkUtils {
         return null;
     }
 
-    private static boolean correctNetworkInterface(NetworkInterface networkInterface ) {
+    private static boolean correctNetworkInterface(NetworkInterface networkInterface) {
         String interfaceName = networkInterface.getDisplayName();
         return interfaceName.equals("wlan") || interfaceName.equals("eth0")
                 || interfaceName.equals("wlp3s0") || interfaceName.equals("enp0s3");

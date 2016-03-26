@@ -16,12 +16,17 @@ public class MulticastClient implements Runnable {
     public void run() {
         try (DatagramSocket serverSocket = new DatagramSocket()) {
             ServerConnectionEstablishPacketBuilder establishPacketBuilder = new ServerConnectionEstablishPacketBuilder();
-            establishPacketBuilder.setInetAddress(NetworkUtils.getIPV6()).setPort(Constants.SERVER_IDENTIFICATION_PORT);
+            establishPacketBuilder.setInetAddress(NetworkUtils.getIPV6()).setPort(Constants.CLIENT_LISTENER_PORT);
             DatagramPacket datagramPacket = establishPacketBuilder.build();
             serverSocket.send(datagramPacket);
-            LOG.info("Datagram packet with IPV6 address sent");
+            LOG.info("Datagram packet with IPV6 address and hearing port sent");
+
+            EventHandlerClient eventHandlerClient = new EventHandlerClient(Constants.CLIENT_LISTENER_PORT);
+            eventHandlerClient.start();
+            LOG.info("Event buttons listener thread created and started");
+
         } catch (IOException e) {
-            e.printStackTrace();
+            LOG.severe(e.getMessage());
         }
     }
 }
