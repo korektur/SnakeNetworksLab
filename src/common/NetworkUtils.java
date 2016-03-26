@@ -15,16 +15,16 @@ public class NetworkUtils {
 
     private static final Logger LOG = Logger.getLogger(NetworkUtils .class.getName());
 
-    public static Inet6Address getIPV6() {
+    public static InetAddress getIPV6() {
         try {
             for (Enumeration<NetworkInterface> en = NetworkInterface.getNetworkInterfaces(); en.hasMoreElements();) {
                 NetworkInterface networkInterface = en.nextElement();
-                if (networkInterface.getDisplayName().equals("wlan") || networkInterface.getDisplayName().equals("wlp3s0")) {
-                    for (Enumeration<InetAddress> inetAddressEnumeration = networkInterface.getInetAddresses(); inetAddressEnumeration.hasMoreElements();) {
-                        InetAddress inetAddress = inetAddressEnumeration.nextElement();
+                if (correctNetworkInterface(networkInterface)) {
+                    for (Enumeration<InetAddress> inetAddresses = networkInterface.getInetAddresses(); inetAddresses.hasMoreElements();) {
+                        InetAddress inetAddress = inetAddresses.nextElement();
                         if (inetAddress.getHostAddress().contains(":")) {
                             LOG.info(networkInterface.getDisplayName() + " - " + inetAddress.getHostAddress());
-                            return (Inet6Address) inetAddress;
+                            return inetAddress;
                         }
                     }
                 }
@@ -34,5 +34,11 @@ public class NetworkUtils {
             return null;
         }
         return null;
+    }
+
+    private static boolean correctNetworkInterface(NetworkInterface networkInterface ) {
+        String interfaceName = networkInterface.getDisplayName();
+        return interfaceName.equals("wlan") || interfaceName.equals("eth0")
+                || interfaceName.equals("wlp3s0") || interfaceName.equals("enp0s3");
     }
 }
