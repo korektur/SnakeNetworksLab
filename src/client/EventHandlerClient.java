@@ -42,10 +42,10 @@ public class EventHandlerClient implements Runnable {
             Thread eventButtonPressedThread = new Thread(eventButtonPressedSender);
 
             ClientBoardInfoReceiver clientBoardInfoReceiver = new ClientBoardInfoReceiver(objectInputStream);
-            Thread clientBoardInfoThread = new Thread(clientBoardInfoReceiver);
+
 
             eventButtonPressedThread.start();
-            clientBoardInfoThread.run();
+            clientBoardInfoReceiver.run();
         } catch (IOException e) {
             throw new IllegalStateException("Couldn't create event sender for " + port + " beacuse of " + e.getMessage());
         }
