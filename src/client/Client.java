@@ -13,6 +13,7 @@ public class Client implements Runnable {
     private static final Logger LOG = Logger.getLogger(Client.class.getName());
 
     public static void main(String[] args) {
+        Constants.ANYCAST_ADDRESS = args[1];
         new Client().run();
     }
 
