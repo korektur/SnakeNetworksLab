@@ -5,7 +5,6 @@ import common.snake.Apple;
 import common.snake.Board;
 import common.snake.Snake;
 
-import java.awt.event.ActionEvent;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.concurrent.ConcurrentHashMap;
@@ -16,7 +15,7 @@ import java.util.stream.Collectors;
  * @author korektur
  *         26/03/16
  */
-public class SnakeServerLogicImplementor {
+class SnakeServerLogicImplementor {
 
     private ConcurrentMap<Integer, Snake> snakes;
 
@@ -25,6 +24,8 @@ public class SnakeServerLogicImplementor {
     SnakeServerLogicImplementor() {
         this.snakes = new ConcurrentHashMap<>(Constants.SERVER_MAX_CLIENT_COUNT);
         appleLocationUpdate();
+        Thread maintainer = new Thread(new BoardMaintainer());
+        maintainer.start();
     }
 
     private void checkEatenApple() {
@@ -41,15 +42,14 @@ public class SnakeServerLogicImplementor {
         this.apple = new Apple(x, y);
     }
 
-    void makeStep() {
+    private void makeStep() {
         checkEatenApple();
         Collection<Snake> values = snakes.values();
         values.forEach(Snake::checkCollision);
         values.forEach(Snake::moveSnake);
     }
 
-    public class BoardMaintainer implements Runnable{
-
+    private class BoardMaintainer implements Runnable{
 
         @Override
         public void run() {

@@ -5,10 +5,7 @@ import common.ServerConnectionEstablishPacket;
 import common.snake.Snake;
 
 import java.io.IOException;
-import java.net.DatagramPacket;
-import java.net.InetAddress;
-import java.net.MulticastSocket;
-import java.net.UnknownHostException;
+import java.net.*;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Logger;
@@ -31,7 +28,6 @@ public class ConnectionEstablishAnycastServer implements Runnable {
     public void run() {
 
         int id_counter = 1;
-
         InetAddress address; // Get the address that we are going to connect to.
         try {
             address = InetAddress.getByName(Constants.ANYCAST_ADDRESS);
@@ -42,8 +38,8 @@ public class ConnectionEstablishAnycastServer implements Runnable {
 
         byte[] buf = new byte[256];
 
-        try (MulticastSocket clientSocket = new MulticastSocket(Constants.SERVER_IDENTIFICATION_PORT)) {
-            clientSocket.joinGroup(address);
+        try (DatagramSocket clientSocket = new DatagramSocket(Constants.SERVER_IDENTIFICATION_PORT)) {
+//            clientSocket.joinGroup(address);
 
             while (!Thread.currentThread().isInterrupted()) {
 
@@ -59,14 +55,14 @@ public class ConnectionEstablishAnycastServer implements Runnable {
 
                 if (connectedCnt.incrementAndGet() >= Constants.SERVER_MAX_CLIENT_COUNT) {
                     LOG.info("Too many clients for this server, leaving group");
-                    clientSocket.leaveGroup(address);
+                    clientSocket.disconnect();
 
                     while (connectedCnt.get() >= Constants.SERVER_MAX_CLIENT_COUNT) {
                         connectedCnt.wait();
                     }
 
                     LOG.info("Joining group, waiting for clients");
-                    clientSocket.joinGroup(address);
+                    clientSocket.connect(new InetSocketAddress(Constants.SERVER_IDENTIFICATION_PORT));
                 }
             }
         } catch (IOException | InterruptedException ex) {
