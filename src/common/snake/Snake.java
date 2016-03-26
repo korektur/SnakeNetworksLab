@@ -23,6 +23,7 @@ public class Snake implements Serializable {
     private boolean inGame;
 
     public Snake() {
+        inGame = true;
         snakeLength = 3;
         for (int i = 0; i < snakeLength; i++) {
             x[i] = 50 - i * 10;

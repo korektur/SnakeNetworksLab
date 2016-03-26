@@ -1,10 +1,12 @@
 package common.snake;
 
+import java.io.Serializable;
+
 /**
  * @author korektur
  *         26/03/16
  */
-public class Apple {
+public class Apple implements Serializable {
 
     final int x;
     final int y;

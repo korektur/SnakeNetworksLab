@@ -54,20 +54,20 @@ public class ConnectionEstablishAnycastServer implements Runnable {
                     clientSocket.disconnect();
 
                     while (connectedCnt.get() >= Constants.SERVER_MAX_CLIENT_COUNT) {
-                        connectedCnt.wait();
+//                        connectedCnt.wait();
                     }
 
                     LOG.info("Joining group, waiting for clients");
                     clientSocket.connect(new InetSocketAddress(Constants.SERVER_IDENTIFICATION_PORT));
                 }
             }
-        } catch (IOException | InterruptedException ex) {
+        } catch (IOException ex) {
             ex.printStackTrace();
         }
     }
 
     void disconnect() {
         this.connectedCnt.decrementAndGet();
-        connectedCnt.notifyAll();
+//        connectedCnt.notifyAll();
     }
 }
