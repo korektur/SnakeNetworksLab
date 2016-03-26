@@ -5,8 +5,10 @@ import common.snake.Apple;
 import common.snake.Board;
 import common.snake.Snake;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.stream.Collectors;
@@ -79,6 +81,10 @@ class SnakeServerLogicImplementor {
     }
 
     Board getBoardSnapshot() {
-        return new Board(apple, Collections.unmodifiableList(snakes.values().stream().collect(Collectors.toList())), ++version);
+        List<Snake> snakeList = new ArrayList<>();
+        snakes.values().forEach(snake -> {
+            snakeList.add(snake.clone());
+        });
+        return new Board(apple, snakes.values().stream().collect(Collectors.toList()), ++version);
     }
 }

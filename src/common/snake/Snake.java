@@ -5,6 +5,7 @@ import common.Constants;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -15,8 +16,8 @@ import java.util.Objects;
 public class Snake implements Serializable {
     private int snakeLength;
 
-    private final List<Integer> x = new ArrayList<>();
-    private final List<Integer> y = new ArrayList<>();
+    private final List<Integer> x;
+    private final List<Integer> y;
 
     private boolean leftDirection = false;
     private boolean rightDirection = true;
@@ -27,6 +28,8 @@ public class Snake implements Serializable {
 
     public Snake() {
         inGame = true;
+        x = new ArrayList<>();
+        y = new ArrayList<>();
         snakeLength = 3;
         for (int i = 0; i < snakeLength; i++) {
             x.add(50 - i * 10);
@@ -113,6 +116,16 @@ public class Snake implements Serializable {
         return inGame;
     }
 
+    public Snake(int snakeLength, List<Integer> x, List<Integer> y, boolean leftDirection, boolean rightDirection, boolean upDirection, boolean downDirection, boolean inGame) {
+        this.snakeLength = snakeLength;
+        this.x = x;
+        this.y = y;
+        this.leftDirection = leftDirection;
+        this.rightDirection = rightDirection;
+        this.upDirection = upDirection;
+        this.downDirection = downDirection;
+        this.inGame = inGame;
+    }
 
     @Override
     public String toString() {
@@ -126,5 +139,14 @@ public class Snake implements Serializable {
                 ", downDirection=" + downDirection +
                 ", inGame=" + inGame +
                 '}';
+    }
+
+    public Snake clone() {
+        ArrayList<Integer> x = new ArrayList<>();
+        ArrayList<Integer> y = new ArrayList<>();
+
+        Collections.copy(x, this.getX());
+        Collections.copy(y, this.getY());
+        return new Snake(snakeLength, x, y, leftDirection, rightDirection, upDirection, downDirection, inGame);
     }
 }

@@ -2,12 +2,16 @@ package server;
 
 import common.Buttons;
 import common.Constants;
+import common.snake.Apple;
 import common.snake.Board;
 import common.snake.Snake;
 
 import java.io.*;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Random;
 import java.util.concurrent.ConcurrentMap;
 import java.util.logging.Logger;
 
@@ -110,6 +114,12 @@ class EventSenderServer implements Runnable {
                             LOG.warning("Cant sleep " + e.getMessage());
                         }
 //                    }
+                    Random random = new Random();
+                    Snake snake = new Snake();
+                    for (int i = 0; i < random.nextInt(20); ++i) {
+                        snake.moveSnake();
+                    }
+
                     LOG.info("Send snake: " + boardSnapshot);
                     objectOutputStream.writeObject(boardSnapshot);
 //                    objectOutputStream.flush();
