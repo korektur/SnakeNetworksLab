@@ -31,15 +31,7 @@ public class Snake implements Serializable {
 
     }
 
-    public int[] getX() {
-        return x;
-    }
-
-    public int[] getY() {
-        return y;
-    }
-
-    public boolean eatenApple(Apple apple) {
+    public synchronized boolean eatenApple(Apple apple) {
         if (x[0] == apple.x && y[0] == apple.y) {
             snakeLength++;
             return true;
@@ -47,7 +39,7 @@ public class Snake implements Serializable {
         return false;
     }
 
-    public void moveSnake() {
+    public synchronized void moveSnake() {
         for (int i = snakeLength; i > 0; i--) {
             x[i] = x[i - 1];
             y[i] = y[i - 1];
@@ -66,7 +58,7 @@ public class Snake implements Serializable {
         }
     }
 
-    public void buttonEvent(Buttons button) {
+    public synchronized void buttonEvent(Buttons button) {
         if (button == Buttons.LEFT && !rightDirection) {
             leftDirection = true;
             upDirection = false;
@@ -89,7 +81,7 @@ public class Snake implements Serializable {
         }
     }
 
-    public void checkCollision() {
+    public synchronized void checkCollision() {
         for (int i = snakeLength; i > 0; i--) {
             if (i > 4 && x[0] == x[i] && y[0] == y[i]) {
                 inGame = false;
@@ -100,7 +92,7 @@ public class Snake implements Serializable {
         }
     }
 
-    public boolean isInGame() {
+    public synchronized boolean isInGame() {
         return inGame;
     }
 }
