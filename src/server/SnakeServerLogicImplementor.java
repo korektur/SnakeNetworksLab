@@ -49,6 +49,15 @@ class SnakeServerLogicImplementor {
         values.forEach(Snake::moveSnake);
     }
 
+
+    public ConcurrentMap<Integer, Snake> getSnakes() {
+        return snakes;
+    }
+
+    public Apple getApple() {
+        return apple;
+    }
+
     private class BoardMaintainer implements Runnable{
 
         @Override

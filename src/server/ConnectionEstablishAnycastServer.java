@@ -2,11 +2,9 @@ package server;
 
 import common.Constants;
 import common.ServerConnectionEstablishPacket;
-import common.snake.Snake;
 
 import java.io.IOException;
 import java.net.*;
-import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Logger;
 
@@ -15,12 +13,10 @@ public class ConnectionEstablishAnycastServer implements Runnable {
     private static final Logger LOG = Logger.getLogger(ConnectionEstablishAnycastServer.class.getName());
 
     private final AtomicInteger connectedCnt;
-    private final ConcurrentMap<Integer, Snake> snakes;
     private final SnakeServerLogicImplementor snakeServerLogicImplementor;
 
-    public ConnectionEstablishAnycastServer(ConcurrentMap<Integer, Snake> snakes) {
+    public ConnectionEstablishAnycastServer() {
         connectedCnt = new AtomicInteger(0);
-        this.snakes = snakes;
         this.snakeServerLogicImplementor = new SnakeServerLogicImplementor();
     }
 
@@ -50,7 +46,7 @@ public class ConnectionEstablishAnycastServer implements Runnable {
                 System.out.println("Socket 1 received msg: " + extractedPacket);
 
                 Thread thread = new Thread(new EventSenderServer(id_counter, extractedPacket.getInetAddress(),
-                        extractedPacket.getPort(), snakes, snakeServerLogicImplementor, this));
+                        extractedPacket.getPort(), snakeServerLogicImplementor.getSnakes(), snakeServerLogicImplementor, this));
                 thread.start();
 
                 if (connectedCnt.incrementAndGet() >= Constants.SERVER_MAX_CLIENT_COUNT) {
