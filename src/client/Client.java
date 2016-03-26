@@ -8,9 +8,13 @@ import java.io.IOException;
 import java.net.*;
 import java.util.logging.Logger;
 
-public class MulticastClient implements Runnable {
+public class Client implements Runnable {
 
-    private static final Logger LOG = Logger.getLogger(MulticastClient.class.getName());
+    private static final Logger LOG = Logger.getLogger(Client.class.getName());
+
+    public static void main(String[] args) {
+        new Client().run();
+    }
 
     @Override
     public void run() {

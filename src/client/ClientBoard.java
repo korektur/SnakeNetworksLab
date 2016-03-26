@@ -3,6 +3,7 @@ package client;
 import common.Buttons;
 import common.snake.Board;
 import common.snake.Snake;
+import sun.rmi.runtime.Log;
 
 import javax.swing.*;
 import java.awt.*;
@@ -11,6 +12,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.util.Arrays;
+import java.util.logging.Logger;
 
 import static common.Constants.BOARD_HEIGHT;
 import static common.Constants.BOARD_WIDTH;
@@ -21,6 +23,7 @@ import static common.Constants.BOARD_WIDTH;
  */
 public class ClientBoard extends JPanel implements ActionListener {
 
+    private static final Logger LOG = Logger.getLogger(ClientBoard.class.getName());
     public static Buttons DIRECTION = null;
 
     private Board boardInfo;
@@ -64,9 +67,9 @@ public class ClientBoard extends JPanel implements ActionListener {
         }
         g.drawImage(apple, boardInfo.getApple().getX(), boardInfo.getApple().getY(), this);
         for (Snake snake : boardInfo.getSnakes()) {
-            System.out.println(snake);
+            LOG.info(snake.toString());
             for (int i = 0; i < snake.getSnakeLength(); i++) {
-                g.drawImage(i == 0 ? head : ball, snake.getX()[i], snake.getY()[i], this);
+                g.drawImage(i == 0 ? head : ball, snake.getX().get(i), snake.getY().get(i), this);
             }
         }
 
