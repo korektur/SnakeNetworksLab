@@ -85,16 +85,7 @@ public class Snake {
                 inGame = false;
             }
         }
-        if (y[0] >= Constants.BOARD_HEIGHT) {
-            inGame = false;
-        }
-        if (y[0] < 0) {
-            inGame = false;
-        }
-        if (x[0] >= Constants.BOARD_WIDTH) {
-            inGame = false;
-        }
-        if (x[0] < 0) {
+        if (y[0] >= Constants.BOARD_HEIGHT || y[0] < 0 || x[0] >= Constants.BOARD_WIDTH || x[0] < 0) {
             inGame = false;
         }
     }
