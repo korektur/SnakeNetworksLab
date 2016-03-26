@@ -28,12 +28,12 @@ public class Board implements Serializable {
         return snakes;
     }
 
-
     @Override
     public String toString() {
         return "Board{" +
-                "apple=" + apple +
+                "version=" + version +
                 ", snakes=" + snakes +
+                ", apple=" + apple +
                 '}';
     }
 }
