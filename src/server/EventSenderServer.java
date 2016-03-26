@@ -110,6 +110,7 @@ class EventSenderServer implements Runnable {
                             LOG.warning("Cant sleep " + e.getMessage());
                         }
                     }
+                    LOG.info("Send snake: " + boardSnapshot);
                     objectOutputStream.writeObject(boardSnapshot);
                     objectOutputStream.flush();
 

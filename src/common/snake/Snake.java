@@ -4,6 +4,7 @@ import common.Buttons;
 import common.Constants;
 
 import java.io.Serializable;
+import java.util.Arrays;
 
 /**
  * @author korektur
@@ -103,5 +104,20 @@ public class Snake implements Serializable {
 
     public synchronized boolean isInGame() {
         return inGame;
+    }
+
+
+    @Override
+    public String toString() {
+        return "Snake{" +
+                "snakeLength=" + snakeLength +
+                ", x=" + Arrays.toString(x) +
+                ", y=" + Arrays.toString(y) +
+                ", leftDirection=" + leftDirection +
+                ", rightDirection=" + rightDirection +
+                ", upDirection=" + upDirection +
+                ", downDirection=" + downDirection +
+                ", inGame=" + inGame +
+                '}';
     }
 }

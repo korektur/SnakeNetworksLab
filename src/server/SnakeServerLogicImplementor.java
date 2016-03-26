@@ -50,7 +50,7 @@ class SnakeServerLogicImplementor {
     }
 
 
-    public ConcurrentMap<Integer, Snake> getSnakes() {
+    ConcurrentMap<Integer, Snake> getSnakes() {
         return snakes;
     }
 

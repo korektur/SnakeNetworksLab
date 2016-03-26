@@ -10,8 +10,8 @@ import java.util.List;
  */
 public class Board implements Serializable {
 
-    private final Apple apple;
     private final List<Snake> snakes;
+    private final Apple apple;
 
     public Board(Apple apple, List<Snake> snakes) {
         this.apple = apple;
@@ -24,5 +24,14 @@ public class Board implements Serializable {
 
     public List<Snake> getSnakes() {
         return snakes;
+    }
+
+
+    @Override
+    public String toString() {
+        return "Board{" +
+                "apple=" + apple +
+                ", snakes=" + snakes +
+                '}';
     }
 }
