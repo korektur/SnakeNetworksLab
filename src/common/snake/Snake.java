@@ -4,7 +4,9 @@ import common.Buttons;
 import common.Constants;
 
 import java.io.Serializable;
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 /**
  * @author korektur
@@ -13,8 +15,8 @@ import java.util.Arrays;
 public class Snake implements Serializable {
     private int snakeLength;
 
-    private final int x[] = new int[Constants.BOARD_WIDTH];
-    private final int y[] = new int[Constants.BOARD_HEIGHT];
+    private final List<Integer> x = new ArrayList<>();
+    private final List<Integer> y = new ArrayList<>();
 
     private boolean leftDirection = false;
     private boolean rightDirection = true;
@@ -27,25 +29,25 @@ public class Snake implements Serializable {
         inGame = true;
         snakeLength = 3;
         for (int i = 0; i < snakeLength; i++) {
-            x[i] = 50 - i * 10;
-            y[i] = 50;
+            x.add(50 - i * 10);
+            y.add(50);
         }
 
     }
 
     public synchronized boolean eatenApple(Apple apple) {
-        if (x[0] == apple.x && y[0] == apple.y) {
+        if (x.get(0) == apple.x && y.get(0) == apple.y) {
             snakeLength++;
             return true;
         }
         return false;
     }
 
-    public int[] getY() {
+    public List<Integer> getY() {
         return y;
     }
 
-    public int[] getX() {
+    public List<Integer> getX() {
         return x;
     }
 
@@ -55,20 +57,20 @@ public class Snake implements Serializable {
 
     public synchronized void moveSnake() {
         for (int i = snakeLength; i > 0; i--) {
-            x[i] = x[i - 1];
-            y[i] = y[i - 1];
+            x.set(i, x.get(i - 1));
+            y.set(i, y.get(i - 1));
         }
         if (leftDirection) {
-            x[0] -= Constants.DOT_SIZE;
+            x.set(0, x.get(0) - Constants.DOT_SIZE);
         }
         if (rightDirection) {
-            x[0] += Constants.DOT_SIZE;
+            x.set(0, x.get(0) + Constants.DOT_SIZE);
         }
         if (upDirection) {
-            y[0] -= Constants.DOT_SIZE;
+            y.set(0, y.get(0) - Constants.DOT_SIZE);
         }
         if (downDirection) {
-            y[0] += Constants.DOT_SIZE;
+            y.set(0, y.get(0) + Constants.DOT_SIZE);
         }
     }
 
@@ -97,11 +99,11 @@ public class Snake implements Serializable {
 
     public synchronized void checkCollision() {
         for (int i = snakeLength; i > 0; i--) {
-            if (i > 4 && x[0] == x[i] && y[0] == y[i]) {
+            if (i > 4 && Objects.equals(x.get(0), x.get(i)) && Objects.equals(y.get(0), y.get(i))) {
                 inGame = false;
             }
         }
-        if (y[0] >= Constants.BOARD_HEIGHT || y[0] < 0 || x[0] >= Constants.BOARD_WIDTH || x[0] < 0) {
+        if (y.get(0) >= Constants.BOARD_HEIGHT || y.get(0) < 0 || x.get(0) >= Constants.BOARD_WIDTH || x.get(0) < 0) {
             inGame = false;
         }
     }
@@ -115,8 +117,8 @@ public class Snake implements Serializable {
     public String toString() {
         return "Snake{" +
                 "snakeLength=" + snakeLength +
-                ", x=" + Arrays.toString(x) +
-                ", y=" + Arrays.toString(y) +
+                ", x=" + x +
+                ", y=" + y +
                 ", leftDirection=" + leftDirection +
                 ", rightDirection=" + rightDirection +
                 ", upDirection=" + upDirection +

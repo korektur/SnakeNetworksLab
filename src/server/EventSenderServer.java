@@ -103,16 +103,16 @@ class EventSenderServer implements Runnable {
                     LOG.info("Sending board");
                     long curTime = System.currentTimeMillis();
                     Board boardSnapshot = snakeServerLogicImplementor.getBoardSnapshot();
-                    while (System.currentTimeMillis() - curTime < Constants.SNAKE_DELAY) {
+//                    while (System.currentTimeMillis() - curTime < Constants.SNAKE_DELAY) {
                         try {
                             Thread.sleep(Constants.SNAKE_DELAY - (System.currentTimeMillis() - curTime));
                         } catch (InterruptedException e) {
                             LOG.warning("Cant sleep " + e.getMessage());
                         }
-                    }
+//                    }
                     LOG.info("Send snake: " + boardSnapshot);
                     objectOutputStream.writeObject(boardSnapshot);
-                    objectOutputStream.flush();
+//                    objectOutputStream.flush();
 
                     if (!snakes.get(id).isInGame()) {
                         snakes.remove(id);
