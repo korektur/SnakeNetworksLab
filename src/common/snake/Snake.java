@@ -3,11 +3,13 @@ package common.snake;
 import common.Buttons;
 import common.Constants;
 
+import java.io.Serializable;
+
 /**
  * @author korektur
  *         26/03/16
  */
-public class Snake {
+public class Snake implements Serializable {
     private int snakeLength;
 
     private final int x[] = new int[Constants.BOARD_WIDTH];
