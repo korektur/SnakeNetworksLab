@@ -38,7 +38,7 @@ public class NetworkUtils {
 
     private static boolean correctNetworkInterface(NetworkInterface networkInterface) {
         String interfaceName = networkInterface.getDisplayName();
-        return interfaceName.equals("wlan") || interfaceName.equals("eth0")
+        return interfaceName.equals("wlan0") || interfaceName.equals("eth0")
                 || interfaceName.equals("wlp3s0") || interfaceName.equals("enp0s3");
     }
 }
