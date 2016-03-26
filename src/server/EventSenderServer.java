@@ -77,7 +77,7 @@ class EventSenderServer implements Runnable {
             try (ObjectInputStream objectInputStream = new ObjectInputStream(is)) {
 
                 while (!Thread.currentThread().isInterrupted()) {
-                    LOG.info("Waiting for event");
+//                    LOG.info("Waiting for event");
                     Object o = objectInputStream.readObject();
                     if (o instanceof Buttons) {
                         LOG.info("Received button event " + o + " from " + id);
@@ -104,7 +104,7 @@ class EventSenderServer implements Runnable {
         public void run() {
             try (ObjectOutputStream objectOutputStream = new ObjectOutputStream(os)) {
                 while (!Thread.currentThread().isInterrupted()) {
-                    LOG.info("Sending board");
+//                    LOG.info("Sending board");
                     long curTime = System.currentTimeMillis();
                     Board boardSnapshot = snakeServerLogicImplementor.getBoardSnapshot();
 //                    while (System.currentTimeMillis() - curTime < Constants.SNAKE_DELAY) {
@@ -120,21 +120,23 @@ class EventSenderServer implements Runnable {
                         snake.moveSnake();
                     }
 
-                    LOG.info("Send snake: " + boardSnapshot);
+//                    LOG.info("Send snake: " + boardSnapshot);
                     objectOutputStream.writeObject(boardSnapshot);
-                    LOG.info("Send snake: " + boardSnapshot);
 //                    objectOutputStream.flush();
 
                     if (!snakes.get(id).isInGame()) {
-                        snakes.remove(id);
-                        LOG.info("Disconnected from server id: " + id);
-                        server.disconnect();
-                        receiverThread.interrupt();
-                        Thread.currentThread().interrupt();
+                        break;
+
                     }
                 }
             } catch (IOException e) {
+
                 throw new IllegalStateException(e.getMessage());
+            } finally {
+                LOG.info("Disconnected from server id: " + id);
+                server.disconnect();
+                receiverThread.interrupt();
+                Thread.currentThread().interrupt();
             }
         }
     }

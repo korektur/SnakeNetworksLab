@@ -45,7 +45,7 @@ public class ConnectionEstablishAnycastServer implements Runnable {
                 LOG.info("Received packet: " + extractedPacket);
                 System.out.println("Socket 1 received msg: " + extractedPacket);
 
-                Thread thread = new Thread(new EventSenderServer(id_counter, extractedPacket.getInetAddress(),
+                Thread thread = new Thread(new EventSenderServer(++id_counter, extractedPacket.getInetAddress(),
                         extractedPacket.getPort(), snakeServerLogicImplementor.getSnakes(), snakeServerLogicImplementor, this));
                 thread.start();
 
