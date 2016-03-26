@@ -19,10 +19,12 @@ public class ConnectionEstablishAnycastServer implements Runnable {
 
     private final AtomicInteger connectedCnt;
     private final ConcurrentMap<Integer, Snake> snakes;
+    private final SnakeServerLogicImplementor snakeServerLogicImplementor;
 
     public ConnectionEstablishAnycastServer(ConcurrentMap<Integer, Snake> snakes) {
         connectedCnt = new AtomicInteger(0);
         this.snakes = snakes;
+        this.snakeServerLogicImplementor = new SnakeServerLogicImplementor();
     }
 
     @Override
@@ -52,7 +54,7 @@ public class ConnectionEstablishAnycastServer implements Runnable {
                 System.out.println("Socket 1 received msg: " + extractedPacket);
 
                 Thread thread = new Thread(new EventSenderServer(id_counter, extractedPacket.getInetAddress(),
-                        extractedPacket.getPort(), snakes));
+                        extractedPacket.getPort(), snakes, snakeServerLogicImplementor, this));
                 thread.start();
 
                 if (connectedCnt.incrementAndGet() >= Constants.SERVER_MAX_CLIENT_COUNT) {
@@ -72,7 +74,7 @@ public class ConnectionEstablishAnycastServer implements Runnable {
         }
     }
 
-    public void disconnect() {
+    void disconnect() {
         this.connectedCnt.decrementAndGet();
         connectedCnt.notifyAll();
     }

@@ -2,12 +2,15 @@ package server;
 
 import common.Constants;
 import common.snake.Apple;
+import common.snake.Board;
 import common.snake.Snake;
 
 import java.awt.event.ActionEvent;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+import java.util.stream.Collectors;
 
 /**
  * @author korektur
@@ -38,10 +41,33 @@ public class SnakeServerLogicImplementor {
         this.apple = new Apple(x, y);
     }
 
-    public void makeStep(ActionEvent e) {
+    void makeStep() {
         checkEatenApple();
         Collection<Snake> values = snakes.values();
         values.forEach(Snake::checkCollision);
         values.forEach(Snake::moveSnake);
+    }
+
+    public class BoardMaintainer implements Runnable{
+
+
+        @Override
+        public void run() {
+            while(!Thread.currentThread().isInterrupted()) {
+                long startTime = System.currentTimeMillis();
+                SnakeServerLogicImplementor.this.makeStep();
+                while(System.currentTimeMillis() - startTime < Constants.SNAKE_DELAY) {
+                    try {
+                        Thread.sleep(Constants.SNAKE_DELAY - (System.currentTimeMillis() - startTime));
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
+    }
+
+    Board getBoardSnapshot() {
+        return new Board(apple, Collections.unmodifiableList(snakes.values().stream().collect(Collectors.toList())));
     }
 }
