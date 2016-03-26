@@ -69,7 +69,6 @@ public class ClientBoard extends JPanel implements ActionListener {
             g.drawImage(apple, boardInfo.getApple().getX(), boardInfo.getApple().getY(), this);
         }
         for (Snake snake : boardInfo.getSnakes()) {
-            LOG.info(snake.toString());
             for (int i = 0; i < snake.getSnakeLength(); i++) {
                 g.drawImage(i == 0 ? head : ball, snake.getX().get(i), snake.getY().get(i), this);
             }

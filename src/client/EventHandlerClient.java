@@ -78,11 +78,12 @@ public class EventHandlerClient implements Runnable {
             while (!Thread.currentThread().isInterrupted()) {
                 try {
                     Board board = (Board) objectInputStream.readObject();
-                    LOG.info("Get board object " + board.toString());
+//                    LOG.info("Get board object " + board.toString());
                     clientBoard.updateBoard(board);
                     clientBoard.repaint();
                 } catch (ClassNotFoundException | IOException e) {
                     LOG.severe("Couldn't create event sender for " + port + " because of " + e.getMessage());
+                    break;
                 }
             }
         }
@@ -106,6 +107,7 @@ public class EventHandlerClient implements Runnable {
                         ClientBoard.DIRECTION = null;
                     } catch (IOException e) {
                         LOG.severe(e.getMessage());
+                        break;
                     }
                 }
             }
