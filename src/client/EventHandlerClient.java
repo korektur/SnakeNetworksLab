@@ -10,44 +10,68 @@ import java.util.logging.Logger;
  * @author korektur
  *         26/03/16
  */
-public class EventHandlerClient {
+public class EventHandlerClient implements Runnable {
 
     public static final Logger LOG = Logger.getLogger(EventHandlerClient.class.getName());
 
     private final int port;
-    private final ObjectOutputStream objectOutputStream;
-    private final ObjectInputStream objectInputStream;
+    private ObjectOutputStream objectOutputStream;
+    private ObjectInputStream objectInputStream;
 
     public EventHandlerClient(int port) throws IOException {
         this.port = port;
-        ServerSocket serverSocket = new ServerSocket(port);
-        serverSocket.setSoTimeout(5000);
-
-        OutputStream outputStream = serverSocket.accept().getOutputStream();
-        objectOutputStream = new ObjectOutputStream(outputStream);
-
-        InputStream inputStream = serverSocket.accept().getInputStream();
-        objectInputStream = new ObjectInputStream(inputStream);
     }
 
-    public void start() {
-        LOG.info("Client event sender/receiver ready for chatting");
-        Thread eventSender = new Thread(new EventSender());
-        eventSender.start();
+    @Override
+    public void run() {
+        try (ServerSocket serverSocket = new ServerSocket(port);
+             OutputStream outputStream = serverSocket.accept().getOutputStream();
+             InputStream inputStream = serverSocket.accept().getInputStream()) {
 
-        ClientBoard clientBoard = new ClientBoard();
-        while (!Thread.currentThread().isInterrupted()) {
-            try {
-                Board board = (Board) objectInputStream.readObject();
-                clientBoard.updateBoard(board);
-                clientBoard.repaint();
-            } catch (ClassNotFoundException | IOException e) {
-                LOG.severe("Couldn't create event sender for " + port + " because of " + e.getMessage());
+            objectOutputStream = new ObjectOutputStream(outputStream);
+            objectInputStream = new ObjectInputStream(inputStream);
+
+            EventButtonPressedSender eventButtonPressedSender = new EventButtonPressedSender(objectOutputStream);
+            Thread eventButtonPressedThread = new Thread(eventButtonPressedSender);
+
+            ClientBoardInfoReceiver clientBoardInfoReceiver = new ClientBoardInfoReceiver(objectInputStream);
+            Thread clientBoardInfoThread = new Thread(clientBoardInfoReceiver);
+
+            eventButtonPressedThread.start();
+            clientBoardInfoThread.run();
+        } catch (IOException e) {
+            throw new IllegalStateException("Couldn't create event sender for " + port + " beacuse of " + e.getMessage());
+        }
+    }
+
+    private class ClientBoardInfoReceiver implements Runnable {
+        private ObjectInputStream objectInputStream;
+
+        private ClientBoardInfoReceiver(ObjectInputStream objectInputStream) {
+            this.objectInputStream = objectInputStream;
+        }
+
+        @Override
+        public void run() {
+            ClientBoard clientBoard = new ClientBoard();
+            while (!Thread.currentThread().isInterrupted()) {
+                try {
+                    Board board = (Board) objectInputStream.readObject();
+                    clientBoard.updateBoard(board);
+                    clientBoard.repaint();
+                } catch (ClassNotFoundException | IOException e) {
+                    LOG.severe("Couldn't create event sender for " + port + " because of " + e.getMessage());
+                }
             }
         }
     }
 
-    private class EventSender implements Runnable {
+    private class EventButtonPressedSender implements Runnable {
+        private ObjectOutputStream objectOutputStream;
+
+        private EventButtonPressedSender(ObjectOutputStream objectOutputStream) {
+            this.objectOutputStream = objectOutputStream;
+        }
 
         @Override
         public void run() {

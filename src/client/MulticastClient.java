@@ -22,8 +22,7 @@ public class MulticastClient implements Runnable {
             LOG.info("Datagram packet with IPV6 address and hearing port sent");
 
             EventHandlerClient eventHandlerClient = new EventHandlerClient(Constants.CLIENT_LISTENER_PORT);
-            eventHandlerClient.start();
-            LOG.info("Event buttons listener thread created and started");
+            eventHandlerClient.run();
 
         } catch (IOException e) {
             LOG.severe(e.getMessage());
