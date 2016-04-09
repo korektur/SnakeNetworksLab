@@ -33,36 +33,37 @@ public class ConnectionEstablishAnycastServer implements Runnable {
         }
 
         byte[] buf = new byte[256];
-
-        try (DatagramSocket clientSocket = new DatagramSocket(Constants.SERVER_IDENTIFICATION_PORT)) {
+        while (Thread.currentThread().isInterrupted()) {
+            try (DatagramSocket clientSocket = new DatagramSocket(Constants.SERVER_IDENTIFICATION_PORT)) {
 //            clientSocket.joinGroup(address);
 
-            while (!Thread.currentThread().isInterrupted()) {
+                while (!Thread.currentThread().isInterrupted()) {
 
-                DatagramPacket msgPacket = new DatagramPacket(buf, buf.length);
-                clientSocket.receive(msgPacket);
-                ServerConnectionEstablishPacket extractedPacket = ServerConnectionEstablishPacket.extractFromPacket(msgPacket);
-                LOG.info("Received packet: " + extractedPacket);
-                System.out.println("Socket 1 received msg: " + extractedPacket);
+                    DatagramPacket msgPacket = new DatagramPacket(buf, buf.length);
+                    clientSocket.receive(msgPacket);
+                    ServerConnectionEstablishPacket extractedPacket = ServerConnectionEstablishPacket.extractFromPacket(msgPacket);
+                    LOG.info("Received packet: " + extractedPacket);
+                    System.out.println("Socket 1 received msg: " + extractedPacket);
 
-                Thread thread = new Thread(new EventSenderServer(++id_counter, extractedPacket.getInetAddress(),
-                        extractedPacket.getPort(), snakeServerLogicImplementor.getSnakes(), snakeServerLogicImplementor, this));
-                thread.start();
+                    Thread thread = new Thread(new EventSenderServer(++id_counter, extractedPacket.getInetAddress(),
+                            extractedPacket.getPort(), snakeServerLogicImplementor.getSnakes(), snakeServerLogicImplementor, this));
+                    thread.start();
 
-                if (connectedCnt.incrementAndGet() >= Constants.SERVER_MAX_CLIENT_COUNT) {
-                    LOG.info("Too many clients for this server, leaving group");
-                    clientSocket.disconnect();
+                    if (connectedCnt.incrementAndGet() >= Constants.SERVER_MAX_CLIENT_COUNT) {
+                        LOG.info("Too many clients for this server, leaving group");
+                        clientSocket.disconnect();
 
-                    while (connectedCnt.get() >= Constants.SERVER_MAX_CLIENT_COUNT) {
+                        while (connectedCnt.get() >= Constants.SERVER_MAX_CLIENT_COUNT) {
 //                        connectedCnt.wait();
-                    }
+                        }
 
-                    LOG.info("Joining group, waiting for clients");
-                    clientSocket.connect(new InetSocketAddress(Constants.SERVER_IDENTIFICATION_PORT));
+                        LOG.info("Joining group, waiting for clients");
+                        clientSocket.connect(new InetSocketAddress(Constants.SERVER_IDENTIFICATION_PORT));
+                    }
                 }
+            } catch (IOException ex) {
+                ex.printStackTrace();
             }
-        } catch (IOException ex) {
-            ex.printStackTrace();
         }
     }
 
